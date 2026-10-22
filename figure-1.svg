@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 790" width="720" height="790" role="img" aria-labelledby="fig1-title fig1-desc">
+<title id="fig1-title">Figure 1. The path of one write</title>
+<desc id="fig1-desc">Five tiers from top to bottom. The writer, one process with no network call for any check, holds the schema map and derives the family and the subject (72 ns), matches the grant (66 ns), finds the stream (87 ns) and validates the record (15.2 µs for 726 bytes). At a site, the write goes to a NATS leaf server on loopback whose one-replica stream acknowledges it, and the hub's stream sources it when the line returns; with no site, the writer publishes to the hub. The hub, a three-node JetStream cluster, repeats the grant match and stream lookup; a schema id the map lacks has the family unknown, which no stream binds, so the write fails closed. The projector, one durable consumer per stream, checks the address, validates again, parks records whose schema has not arrived, and applies the position guard and node tombstones (Lemmas 1 and 2). The Postgres read model has seven tables, each with one forced row policy, and a read binds its role and tenant in the same round trip.</desc>
+<style>
+.bg { fill: #ffffff; }
+text { fill: #111111; font-family: 'New Computer Modern', 'Latin Modern Roman', 'CMU Serif', Georgia, 'Times New Roman', serif; font-size: 13px; }
+.h { font-weight: bold; font-size: 13px; letter-spacing: 0.02em; }
+.l { font-style: italic; font-size: 12px; }
+.n { font-variant-numeric: tabular-nums; }
+.m { font-family: Menlo, 'DejaVu Sans Mono', Consolas, monospace; font-size: 11.5px; }
+.box { fill: #ffffff; stroke: #111111; stroke-width: 1.1; }
+.rule { stroke: #111111; stroke-width: 0.6; }
+.ar { stroke: #111111; stroke-width: 1.1; }
+.hd { fill: #111111; }
+</style>
+<rect class="bg" x="0" y="0" width="720" height="790"/>
+<rect x="10" y="10" width="700" height="162" class="box"/>
+<line x1="10" y1="36" x2="710" y2="36" class="rule"/>
+<text x="20" y="28" class="h">WRITER: one process; no check makes a network call</text>
+<text x="22" y="53" class="b">schema map in memory: seeded from the build, kept current from the schema family,</text>
+<text x="36" y="71" class="b"><tspan class="m">tenant.&lt;platform&gt;.dag.schema.&lt;id&gt;</tspan></text>
+<text x="22" y="89" class="b">family = <tspan class="m">Kind(schema_id)</tspan>, and</text>
+<text x="22" y="107" class="b">subject = <tspan class="m">tenant.&lt;tenant&gt;.dag.&lt;family&gt;.&lt;id&gt;</tspan></text>
+<text x="698" y="107" class="n" text-anchor="end">72 ns</text>
+<text x="22" y="125" class="b">grant: match the identity's publish trie</text>
+<text x="698" y="125" class="n" text-anchor="end">66 ns</text>
+<text x="22" y="143" class="b">stream: find the stream that binds the subject</text>
+<text x="698" y="143" class="n" text-anchor="end">87 ns</text>
+<text x="22" y="161" class="b">schema: validate the record</text>
+<text x="698" y="161" class="n" text-anchor="end">15.2 µs, 726 bytes</text>
+<line x1="170" y1="172" x2="170" y2="209" class="ar"/>
+<path d="M165.5,208 L170,216 L174.5,208 Z" class="hd"/>
+<text x="180" y="198" class="l">at a site</text>
+<rect x="40" y="216" width="400" height="90" class="box"/>
+<line x1="40" y1="242" x2="440" y2="242" class="rule"/>
+<text x="50" y="234" class="h">SITE: one machine</text>
+<text x="52" y="259" class="b">NATS leaf server on loopback, its own JetStream domain</text>
+<text x="52" y="277" class="b">site stream of the family, one replica: acknowledged</text>
+<text x="52" y="295" class="b">with the line to the hub up or down</text>
+<line x1="170" y1="306" x2="170" y2="357" class="ar"/>
+<path d="M165.5,356 L170,364 L174.5,356 Z" class="hd"/>
+<text x="180" y="330" class="l">the hub's stream sources it</text>
+<text x="180" y="346" class="l">when the line returns</text>
+<line x1="600" y1="172" x2="600" y2="357" class="ar"/>
+<path d="M595.5,356 L600,364 L604.5,356 Z" class="hd"/>
+<text x="610" y="198" class="l">no site</text>
+<text x="610" y="272" class="l">publish</text>
+<rect x="10" y="364" width="700" height="126" class="box"/>
+<line x1="10" y1="390" x2="710" y2="390" class="rule"/>
+<text x="20" y="382" class="h">HUB: three-node JetStream cluster</text>
+<text x="22" y="407" class="b">the broker repeats the grant match and the stream lookup</text>
+<text x="22" y="425" class="b">stream bound to <tspan class="m">tenant.&lt;tenant&gt;.dag.&lt;family&gt;.&gt;</tspan>, three replicas,</text>
+<text x="36" y="443" class="b">ordered by its own Raft group</text>
+<text x="22" y="461" class="b">a schema id the map lacks: family “unknown”; no stream binds</text>
+<text x="36" y="479" class="b"><tspan class="m">tenant.&lt;tenant&gt;.dag.unknown.&gt;</tspan>, so the write fails closed</text>
+<line x1="360" y1="490" x2="360" y2="523" class="ar"/>
+<path d="M355.5,522 L360,530 L364.5,522 Z" class="hd"/>
+<text x="370" y="514" class="l">one durable consumer per stream, in parallel</text>
+<rect x="10" y="530" width="700" height="126" class="box"/>
+<line x1="10" y1="556" x2="710" y2="556" class="rule"/>
+<text x="20" y="548" class="h">PROJECTOR: one deterministic fold</text>
+<text x="22" y="573" class="b">address check; the record is validated again</text>
+<text x="22" y="591" class="b">schema not yet arrived: parked in the tenant's dead-letter stream,</text>
+<text x="36" y="609" class="b">folded at its log position when the schema arrives</text>
+<text x="22" y="627" class="b">position guard (stream, epoch, sequence); node tombstones</text>
+<text x="22" y="645" class="b">Lemma 1 (one stream), Lemma 2 (two streams)</text>
+<line x1="360" y1="656" x2="360" y2="683" class="ar"/>
+<path d="M355.5,682 L360,690 L364.5,682 Z" class="hd"/>
+<rect x="10" y="690" width="700" height="90" class="box"/>
+<line x1="10" y1="716" x2="710" y2="716" class="rule"/>
+<text x="20" y="708" class="h">POSTGRES READ MODEL</text>
+<text x="22" y="733" class="b">seven tables, each with one forced row policy:</text>
+<text x="36" y="751" class="b"><tspan class="m">tenant_id = (SELECT mog_tenant())</tspan></text>
+<text x="22" y="769" class="b">a read binds its role and tenant in the same round trip</text>
+</svg>

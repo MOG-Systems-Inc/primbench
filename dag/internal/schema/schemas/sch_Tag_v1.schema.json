@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://primbench.example/schemas/sch_Tag_v1.schema.json",
+  "title": "sch_Tag_v1",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json#/$defs/nodeBase"
+    }
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "sch_Tag_v1"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "namespace",
+        "value"
+      ],
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "human",
+            "vlm",
+            "system"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}

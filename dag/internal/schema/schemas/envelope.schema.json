@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://primbench.example/schemas/envelope.schema.json",
+  "$defs": {
+    "nanoIdNode": {
+      "type": "string",
+      "pattern": "^nd_[A-Za-z0-9_-]{6,}$"
+    },
+    "nanoIdEdge": {
+      "type": "string",
+      "pattern": "^ed_[A-Za-z0-9_-]{6,}$"
+    },
+    "schemaId": {
+      "type": "string",
+      "pattern": "^sch_[A-Za-z0-9]+(_[A-Za-z0-9]+)*_v[0-9]+$"
+    },
+    "tenantId": {
+      "type": "string",
+      "enum": [
+        "acme",
+        "globex",
+        "initech"
+      ]
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nodeBase": {
+      "type": "object",
+      "required": [
+        "node_id",
+        "schema_id",
+        "payload"
+      ],
+      "properties": {
+        "node_id": {
+          "$ref": "#/$defs/nanoIdNode"
+        },
+        "schema_id": {
+          "$ref": "#/$defs/schemaId"
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/tenantId"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nanoIdNode"
+          }
+        },
+        "payload": {
+          "type": "object"
+        }
+      }
+    },
+    "edgeBase": {
+      "type": "object",
+      "required": [
+        "edge_id",
+        "schema_id",
+        "source_id"
+      ],
+      "properties": {
+        "edge_id": {
+          "$ref": "#/$defs/nanoIdEdge"
+        },
+        "schema_id": {
+          "$ref": "#/$defs/schemaId"
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/tenantId"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_id": {
+          "$ref": "#/$defs/nanoIdNode"
+        },
+        "target_id": {
+          "$ref": "#/$defs/nanoIdNode"
+        },
+        "payload": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

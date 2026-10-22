@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://primbench.example/schemas/sch_Asset_ProRes_v2.schema.json",
+  "title": "sch_Asset_ProRes_v2",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json#/$defs/nodeBase"
+    }
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "sch_Asset_ProRes_v2"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codec",
+        "origin"
+      ],
+      "if": {
+        "required": [
+          "original_state"
+        ],
+        "properties": {
+          "original_state": {
+            "enum": [
+              "not_synced",
+              "uploading"
+            ]
+          }
+        }
+      },
+      "else": {
+        "required": [
+          "storage_uri"
+        ]
+      },
+      "properties": {
+        "storage_uri": {
+          "type": "string",
+          "pattern": "^s3://[a-z0-9.-]{3,63}/.+"
+        },
+        "codec": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "proxy_uri": {
+          "type": "string",
+          "pattern": "^s3://[a-z0-9.-]{3,63}/.+"
+        },
+        "jpeg_seq_prefix": {
+          "type": "string",
+          "pattern": "^s3://[a-z0-9.-]{3,63}/.+"
+        },
+        "duration_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dead_air": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "number",
+                "minimum": 0
+              }
+            ],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "ingest_state": {
+          "type": "string",
+          "enum": [
+            "received",
+            "transcoding",
+            "proxied",
+            "pruned",
+            "indexed"
+          ]
+        },
+        "basename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hash_xxh3": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{32}$"
+        },
+        "hash_xxh3_scope": {
+          "const": "first_16MiB+last_16MiB+size"
+        },
+        "nb_frames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fps_num": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fps_den": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sidecar_prefix": {
+          "type": "string",
+          "pattern": "^s3://[a-z0-9.-]{3,63}/.+"
+        },
+        "analysis_proxy_uri": {
+          "type": "string",
+          "pattern": "^s3://[a-z0-9.-]{3,63}/.+"
+        },
+        "audio_uri": {
+          "type": "string",
+          "pattern": "^s3://[a-z0-9.-]{3,63}/.+"
+        },
+        "live_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "live": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "in",
+              "out"
+            ],
+            "properties": {
+              "in": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "out": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "crop_mode": {
+          "type": "string",
+          "enum": [
+            "nine_sixteen",
+            "none"
+          ]
+        },
+        "select_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "needs_review": {
+          "type": "boolean"
+        },
+        "pose_present_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shot": {
+          "type": "string"
+        },
+        "sidecar_stage": {
+          "type": "string",
+          "enum": [
+            "probe",
+            "proxy",
+            "derived",
+            "indexed"
+          ]
+        },
+        "preview_uri": {
+          "type": "string",
+          "pattern": "^s3://[a-z0-9.-]{3,63}/.+"
+        },
+        "movement_class": {
+          "type": "string"
+        },
+        "descriptor": {
+          "type": "string"
+        },
+        "rep_signal": {
+          "type": "string"
+        },
+        "rep_rom_deg": {
+          "type": "number",
+          "minimum": 0
+        },
+        "pose_smoothed": {
+          "type": "boolean"
+        },
+        "capture_id": {
+          "type": "string",
+          "pattern": "^cap_[A-Za-z0-9_-]{22}$"
+        },
+        "original_state": {
+          "type": "string",
+          "enum": [
+            "synced",
+            "not_synced",
+            "uploading"
+          ]
+        },
+        "original_upload_until": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "original_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "original_codec": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "share_path": {
+          "type": "string",
+          "pattern": "^hot/originals/nd_[A-Za-z0-9_-]{6,128}/[^/]{1,200}$"
+        },
+        "phone_proxy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "uri",
+            "bytes"
+          ],
+          "properties": {
+            "uri": {
+              "type": "string",
+              "pattern": "^s3://[a-z0-9.-]{3,63}/.+"
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "uploaded_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "uploaded_by": {
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        },
+        "retracted": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
